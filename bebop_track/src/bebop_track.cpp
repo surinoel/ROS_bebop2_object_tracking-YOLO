@@ -26,8 +26,9 @@ void BebopTrack::_boxCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &b
         ROS_INFO("xmax : %ld", boxMsg.xmax);
         ROS_INFO("ymin : %ld", boxMsg.ymin);
         ROS_INFO("ymax : %ld", boxMsg.ymax);
-        ROS_INFO("cameraWidth : %ld", boxMsg.cameraWidth);
-        ROS_INFO("cameraHeight : %ld", boxMsg.cameraHeight);
+        /* not define boxMsg.cameraWidth, boxMsg.cameraHeight */ 
+        // ROS_INFO("cameraWidth : %ld", boxMsg.cameraWidth);
+        // ROS_INFO("cameraHeight : %ld", boxMsg.cameraHeight);
 
         long int xMiddle = (boxMsg.xmin + boxMsg.xmax) / 2;
         long int yMiddle = (boxMsg.ymin + boxMsg.ymax) / 2;
