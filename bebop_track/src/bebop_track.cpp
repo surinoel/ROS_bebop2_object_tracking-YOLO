@@ -37,6 +37,9 @@ void BebopTrack::_boxCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &b
         // ROS_INFO("cameraWidth : %ld", boxMsg.cameraWidth);
         // ROS_INFO("cameraHeight : %ld", boxMsg.cameraHeight);
 
+        /*
+        전체 프레임은 856x480
+        */
         long int xMiddle = (boxMsg.xmin + boxMsg.xmax) / 2;
         long int yMiddle = (boxMsg.ymin + boxMsg.ymax) / 2;
         long int xDifference = xMiddle - _frameMiddleX;
