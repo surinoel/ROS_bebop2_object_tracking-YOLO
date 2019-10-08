@@ -1,13 +1,22 @@
 #include <bebop_track/bebop_track.h>
 
+// param in bebop_teleop 
 const std::string tracking = "/bebop/tracking";
+// darknet_ros에서 발행되는 topic
 const std::string darknet_Boxes_Topic = "darknet_ros/bounding_boxes";
 
 void BebopTrack::_boxCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &boxMessage)
 {
     _nodeHandle.getParam(tracking, _isTracking);
+    // 이륙할 때만 _isTracking = true 
     if(!_isTracking)
         return;
+    /* 
+    추적되는 하나의 물체만 뽑아낸다
+    이 부분은 전체적인 코드의 흠이라고 볼 수 있다. 자동이 아닌 수동의 느낌
+    
+    클래스가 person이면서, person 중에서도 가장 probability가 높고, 사이즈가 큰 것만 추출할 수 있도록 한다
+    */
     darknet_ros_msgs::BoundingBox boxMsg = boxMessage->bounding_boxes[0];
 
     _bebopControlMessage.linear.x = 0;
@@ -17,7 +26,6 @@ void BebopTrack::_boxCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &b
     _bebopControlMessage.angular.y = 0;
     _bebopControlMessage.angular.z = 0;
 
-
     if(boxMsg.probability >= 0.65)
     {
         ROS_INFO("Class : %s", boxMsg.Class.c_str());
@@ -26,8 +34,8 @@ void BebopTrack::_boxCallback(const darknet_ros_msgs::BoundingBoxes::ConstPtr &b
         ROS_INFO("xmax : %ld", boxMsg.xmax);
         ROS_INFO("ymin : %ld", boxMsg.ymin);
         ROS_INFO("ymax : %ld", boxMsg.ymax);
-        ROS_INFO("cameraWidth : %ld", boxMsg.cameraWidth);
-        ROS_INFO("cameraHeight : %ld", boxMsg.cameraHeight);
+        // ROS_INFO("cameraWidth : %ld", boxMsg.cameraWidth);
+        // ROS_INFO("cameraHeight : %ld", boxMsg.cameraHeight);
 
         long int xMiddle = (boxMsg.xmin + boxMsg.xmax) / 2;
         long int yMiddle = (boxMsg.ymin + boxMsg.ymax) / 2;
